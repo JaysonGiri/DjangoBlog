@@ -1,0 +1,12 @@
+{% extends "BlogJay/base.html" %}
+{% block title %}
+
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
