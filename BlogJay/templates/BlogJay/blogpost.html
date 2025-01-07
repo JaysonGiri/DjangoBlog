@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
-    {% if post.image %}<img src="{{ post.image.url }}"> {% else %} NO IMAGE {% endif %}
+    <h1>{{ post.title }}<a href="{% url 'editpost' id=post.id %}">(EDIT)</a></h1>
+    {% if post.image %}<img src="{{ post.image.url }}" style="max-width: 300px; max-height: 300px;"> {% else %} NO IMAGE {% endif %}
     <p>{{ post.content }}</p>
 {% endblock %}
