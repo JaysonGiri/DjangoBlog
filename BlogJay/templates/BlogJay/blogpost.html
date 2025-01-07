@@ -5,5 +5,6 @@
 
 {% block content %}
     <h1>{{ post.title }}</h1>
+    {% if post.image %}<img src="{{ post.image.url }}"> {% else %} NO IMAGE {% endif %}
     <p>{{ post.content }}</p>
 {% endblock %}
