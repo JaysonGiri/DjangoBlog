@@ -8,4 +8,5 @@
         {% for post in posts %}
         <h1><a href="{% url 'blogpost' id=post.id %}">{{ post.title }}</a></h1>
         {% endfor %}
+        <a href="{% url 'addpost' %}"><p>add blog post</p></a>
 {% endblock %}
