@@ -7,6 +7,19 @@
         {% block css %}{% endblock %}
     </head>
     <body>
+        {% if user.is_authenticated %} 
+            <p>Hello, {{ user.username }} </p> 
+
+            <form action="{% url 'logout' %}?next=/" method="post">
+                {% csrf_token %}
+                <button type="submit">Log out</button>
+            </form>
+        
+        {% else %} 
+            <a href="{% url 'login' %}"><p>Login</p></a> 
+            <a href="{% url 'register' %}"><p>Register</p></a> 
+        {% endif %}
+
         <a href="{% url 'index' %}"><p>Go Home</p></a>
         <a href="{% url 'about' %}"><p>about page</p></a>
         {% block content %}

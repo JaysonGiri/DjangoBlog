@@ -1,10 +1,7 @@
 {% extends "BlogJay/base.html" %}
+
 {% block title %}
-    Add Post
-{% endblock %}
-
-{% block css %}
-
+    Login
 {% endblock %}
 
 {% block content %}
@@ -13,10 +10,10 @@
     <h1 style="color: red">{{form.errors}}</h1> 
 {% endif %}
 
-<form method="POST" enctype="multipart/form-data">
+<h2>LOGIN</h2>
+<form method="post">
     {% csrf_token %}
     {{ form }}
-    <button type="submit">Add</button>
+    <button type="Submit">Login</button>
 </form>
-
 {% endblock %}

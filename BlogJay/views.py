@@ -29,7 +29,8 @@ def addPost(request):
             post = form.save()
             return redirect("blogpost", id=post.id)
 
-    form = AddPostForm()
+    else: 
+        form = AddPostForm()
 
     return render(request, "BlogJay/addpost.html", {
         "form": form
@@ -46,9 +47,24 @@ def editPost(request, id):
         if form.is_valid():
             post = form.save()
             return redirect("blogpost", id=post.id)
-        
-    form = AddPostForm(instance=post)
+
+    else:
+        form = AddPostForm(instance=post)
 
     return render(request, "BlogJay/editpost.html", {
         "form": form
+    })
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+
+    else:
+        form = RegisterForm()
+
+    return render(request, "BlogJay/register.html",{
+                  "form": form
     })
