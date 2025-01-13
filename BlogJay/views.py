@@ -20,13 +20,17 @@ def blogpost(request, id):
     })
 
 def about(request):
+    print(request.user)
     return render(request, "BlogJay/about.html", context=None)
 
 def addPost(request):
     if request.method == "POST":
         form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)
+            print(request.user)
+            post.author = request.user
+            post.save()
             return redirect("blogpost", id=post.id)
 
     else: 
@@ -67,4 +71,11 @@ def register(request):
 
     return render(request, "BlogJay/register.html",{
                   "form": form
+    })
+
+def userPage(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.filter(author=user)
+    return render(request, 'BlogJay/userpage.html', {
+        'post_owner': user, 'userPosts': posts
     })
