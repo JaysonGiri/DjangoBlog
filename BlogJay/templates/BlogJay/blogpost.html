@@ -5,6 +5,41 @@
 
 {% block content %}
     <h1>{{ post.title }}{% if user.is_superuser or user == post.author %}<a href="{% url 'editpost' id=post.id %}">(EDIT)</a>{% endif %}</h1>
+    <p>by <a href="{% url 'userpage' username=post.author.username %}">{{ post.author }}</a>, {{ post.created_at|date:"l, M j Y" }}</p>
     {% if post.image %}<img src="{{ post.image.url }}" style="max-width: 300px; max-height: 300px;"> {% else %} NO IMAGE {% endif %}
     <p>{{ post.content }}</p>
+
+    <hr>
+    <h1> Comments </h1>
+    {% for comment in comments %}
+        <p>
+            <b>{{ comment.author.username }}</b>
+            <i>{{ comment.created_at }}</i>
+            {% if comment.edited %}(edited){% endif %}
+        </p>
+        <p>{{ comment.content }}</p>
+        {% if comment.author == user %}
+            <a href="{% url 'editcomment' id=comment.id %}">edit comment</a>
+        {% endif %}
+        {% if comment.author == user or user.is_superuser %}
+            <a href="{% url 'deletecomment' id=comment.id %}">delete comment</a>
+        {% endif %}
+    {% empty %}
+        no comments on this post yet
+    {% endfor %}
+
+    {% if form.errors %}
+        <h1 style="color: red">{{form.errors}}</h1> 
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <h2>leave a comment</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="Submit">Submit</button>
+    </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">login</a>to add a comment</p>
+    {% endif %}
 {% endblock %}

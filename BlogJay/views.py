@@ -4,20 +4,66 @@ from .forms import *
 
 # Create your views here.
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-created_at')[:20]
     return render(request, "BlogJay/index.html", context={
         "posts" : posts
     })
 
 def blogpost(request, id):
+
     try:
         post = get_object_or_404(Post, id=id)
     except:
         return redirect("index")
+
+    if request.method == "POST":
+        if not request.user.is_authenticated: return redirect("login")
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+    else:
+        form = CommentForm()
     
+    comments = Comment.objects.filter(post=post).order_by('-created_at')[:100]
     return render(request, "BlogJay/blogpost.html", context={
-        "post": post
+        "post": post,
+        "comments": comments,
+        "form": form,
     })
+
+def editComment(request, id):
+    try: 
+        comment = get_object_or_404(Comment, id=id)
+    except: 
+        return redirect("index")
+    
+    if not request.user == comment.author: return redirect("index")
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.edited = True
+            comment.save()
+            return redirect("blogpost", id=comment.post.id)
+
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, "BlogJay/editcomment.html", {
+        "form": form
+    })
+
+def deleteComment(request, id):
+    try: comment = get_object_or_404(Comment, id=id)
+    except: redirect("index")
+    post = comment.post
+    if not request.user.is_superuser or not request.user == comment.author: redirect("index")
+    comment.delete()
+    return redirect("blogpost", id=post.id)
 
 def about(request):
     print(request.user)
@@ -28,7 +74,6 @@ def addPost(request):
         form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            print(request.user)
             post.author = request.user
             post.save()
             return redirect("blogpost", id=post.id)
@@ -46,6 +91,8 @@ def editPost(request, id):
     except: 
         return redirect("index")
     
+    if not request.user == post.author: return redirect("index")
+
     if request.method == "POST":
         form = AddPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
@@ -60,9 +107,9 @@ def editPost(request, id):
     })
 
 def deletePost(request, id):
-    if not request.user.is_superuser: redirect("index")
     try: post = get_object_or_404(Post, id=id)
     except: redirect("index")
+    if not request.user.is_superuser and not request.user == post.author: redirect("index")
     post.delete()
     return redirect("index")
 
@@ -82,7 +129,7 @@ def register(request):
 
 def userPage(request, username):
     user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user)
+    posts = Post.objects.filter(author=user).order_by('-created_at')
     return render(request, 'BlogJay/userpage.html', {
         'post_owner': user, 'userPosts': posts
     })

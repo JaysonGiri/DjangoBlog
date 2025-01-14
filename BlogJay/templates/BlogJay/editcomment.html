@@ -1,0 +1,42 @@
+{% extends "BlogJay/base.html" %}
+{% block title %}
+    Edit Comment
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+    <h1 style="color: red">{{form.errors}}</h1> 
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Save</button>
+</form>
+
+<button type="button" onclick="openForm()">DELETE COMMENT</button>
+<div id="deleteform" style="display: none">
+    <h1>ARE YOU SURE???</h1>
+    <a href="{% url 'deletecomment' id=form.instance.id %}">
+        <button type="button">yes bro</button>
+    </a>
+    <button type="button" onclick="closeForm()">nawh bruh</button>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    function openForm(){
+        document.getElementById("deleteform").style.display = "block";
+    }
+    function closeForm(){
+        document.getElementById("deleteform").style.display = "none";
+    }
+</script>
+{% endblock %}

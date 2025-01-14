@@ -11,7 +11,7 @@
         {% endif %}
         {% for post in posts %}
             <h1><a href="{% url 'blogpost' id=post.id %}">{{ post.title }}</a></h1>
-            <p>by {{ post.author }}</p>
+            <p>by <a href="{% url 'userpage' username=post.author.username %}">{{ post.author }}</a>, {{ post.created_at|date:"l, M j Y" }}</p>
         {% endfor %}
         
 {% endblock %}
