@@ -11,6 +11,7 @@
         {% endif %}
         {% for post in posts %}
             <h1><a href="{% url 'blogpost' id=post.id %}">{{ post.title }}</a></h1>
+            <p>by {{ post.author }}</p>
         {% endfor %}
         
 {% endblock %}

@@ -59,6 +59,13 @@ def editPost(request, id):
         "form": form
     })
 
+def deletePost(request, id):
+    if not request.user.is_superuser: redirect("index")
+    try: post = get_object_or_404(Post, id=id)
+    except: redirect("index")
+    post.delete()
+    return redirect("index")
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)

@@ -19,4 +19,24 @@
     <button type="submit">Save</button>
 </form>
 
+<button type="button" onclick="openForm()">DELETE POST</button>
+<div id="deleteform" style="display: none">
+    <h1>ARE YOU SURE???</h1>
+    <a href="{% url 'deletepost' id=form.instance.id %}">
+        <button type="button">yes bro</button>
+    </a>
+    <button type="button" onclick="closeForm()">nawh bruh</button>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    function openForm(){
+        document.getElementById("deleteform").style.display = "block";
+    }
+    function closeForm(){
+        document.getElementById("deleteform").style.display = "none";
+    }
+</script>
 {% endblock %}
