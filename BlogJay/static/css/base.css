@@ -1,0 +1,46 @@
+html {
+    color-scheme: light dark;
+    --textcolor: light-dark(black, white);
+    --maincolor: light-dark(salmon, purple);
+    font-size: 3.2vw;
+}
+
+body {
+    margin: 0;
+    background-color: var(--maincolor);
+    color: var(--textcolor);
+}
+
+div {
+    overflow: hidden;
+}
+
+nav {
+    background-color: salmon;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+}
+
+nav p, nav button {
+    display: inline;
+    margin: 0;
+}
+
+.nav-left {
+    float: left;
+    flex: 1;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-middle {
+    text-align: center;
+    flex: 1;
+}
+
+.nav-right {
+    float: right;
+    flex: 1;
+}

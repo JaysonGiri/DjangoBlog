@@ -1,0 +1,8 @@
+img {
+    float: left;
+    max-width: 50%;
+}
+
+.comments {
+    clear: both;
+}
