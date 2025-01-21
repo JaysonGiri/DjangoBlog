@@ -10,11 +10,25 @@
 {% block content %}
 
     <div class="blog-post">
-        <h1>{{ post.title }}{% if user.is_superuser or user == post.author %}<a href="{% url 'editpost' id=post.id %}">(EDIT)</a>{% endif %}</h1>
-        <p>by <a href="{% url 'userpage' username=post.author.username %}">{{ post.author }}</a>, {{ post.created_at|date:"l, M j Y" }}</p>
+        <h1>{{ post.title }}</h1>
+        <p>
+            by: <a href="{% url 'userpage' username=post.author.username %}">{{ post.author }}</a>, {{ post.created_at|date:"l, M j Y" }}
+            {% if user == post.author %}<a href="{% url 'editpost' id=post.id %}">(EDIT POST)</a>{% endif %}
+        </p>
         {% if post.image %}<img src="{{ post.image.url }}" style="max-width: 300px; max-height: 300px;"> {% else %} NO IMAGE {% endif %}
         <h3>{{ post.content }}</h3>
     </div>
+
+    {% if user.is_superuser %}
+        <button type="button" onclick="openForm()">DELETE POST</button>
+        <div id="deleteform" style="display: none">
+            <h1>ARE YOU SURE???</h1>
+            <a href="{% url 'deletepost' id=post.id %}">
+                <button type="button">yes bro</button>
+            </a>
+            <button type="button" onclick="closeForm()">nawh bruh</button>
+        </div>
+    {% endif %}
 
     <div class="comments">
 
@@ -39,7 +53,7 @@
         {% for comment in comments %}
         <div class="comment">
             <p>
-                <b>{{ comment.author.username }}</b>
+                <b><a href="{% url 'userpage' username=comment.author.username %}">{{ comment.author.username }}</a></b>
                 <span class="tiny">
                     <i>{{ comment.created_at }}</i>
                     {% if comment.author == user %}
@@ -67,3 +81,16 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% if user.is_superuser %}
+{% block script %}
+<script>
+    function openForm(){
+        document.getElementById("deleteform").style.display = "block";
+    }
+    function closeForm(){
+        document.getElementById("deleteform").style.display = "none";
+    }
+</script>
+{% endblock %}
+{% endif %}

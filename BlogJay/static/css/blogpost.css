@@ -67,4 +67,8 @@ img {
     .blog-post {
         width: 800px;
     }
+    .leave-comment textarea {
+        width: 80%;
+        height: 10rem;
+    }
 }
