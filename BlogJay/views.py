@@ -24,6 +24,7 @@ def blogpost(request, id):
             comment.author = request.user
             comment.post = post
             comment.save()
+            form = CommentForm()
     else:
         form = CommentForm()
     
@@ -70,6 +71,7 @@ def about(request):
     return render(request, "BlogJay/about.html", context=None)
 
 def addPost(request):
+    if not request.user.is_authenticated: return redirect("login")
     if request.method == "POST":
         form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
